@@ -3,8 +3,8 @@
     "defaults": {
       "model": {
         "primary": "google/gemini-2.5-flash"
-      },
-      "systemPrompt": "Você é um assistente pessoal chamado Alfred. Responda sempre em português do Brasil. Seja direto e objetivo. Nunca repita mensagens. Envie apenas uma resposta por vez."
+      }
+
     }
   },
   "models": {
