@@ -2,7 +2,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "google/gemini-1.5-flash"
+        "primary": "google/gemini-1.5-flash-latest"
       }
     }
   },
@@ -10,9 +10,9 @@
     "providers": {
       "google": {
         "apiKey": "${GOOGLE_GENERATIVE_AI_API_KEY}",
-        "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+        "baseUrl": "https://generativelanguage.googleapis.com/v1",
         "models": [
-          { "id": "gemini-1.5-flash", "name": "Gemini 1.5 Flash" }
+          { "id": "gemini-1.5-flash-latest", "name": "Gemini 1.5 Flash" }
         ]
       }
     }
