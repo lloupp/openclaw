@@ -1,0 +1,12 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "google/gemini-1.5-flash"
+      },
+      "models": {
+        "google/gemini-1.5-flash": { "alias": "Gemini Flash" }
+      }
+    }
+  }
+}
