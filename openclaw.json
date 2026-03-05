@@ -6,6 +6,13 @@
       }
     }
   },
+  "models": {
+    "providers": {
+      "google": {
+        "apiKey": "${GOOGLE_GENERATIVE_AI_API_KEY}"
+      }
+    }
+  },
   "channels": {
     "telegram": {
       "dmPolicy": "open",
