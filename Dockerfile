@@ -104,6 +104,10 @@ RUN pnpm build
 ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:build
 
+# ✅ Copia o openclaw.json para o diretório de config do OpenClaw
+RUN mkdir -p /home/node/.openclaw && \
+    cp /app/openclaw.json /home/node/.openclaw/openclaw.json
+
 # Expose the CLI binary without requiring npm global writes as non-root.
 USER root
 RUN ln -sf /app/openclaw.mjs /usr/local/bin/openclaw \
