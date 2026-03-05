@@ -1,0 +1,15 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-haiku-4-5"
+      }
+    }
+  },
+  "channels": {
+    "telegram": {
+      "dmPolicy": "open",
+      "allowFrom": ["*"]
+    }
+  }
+}
