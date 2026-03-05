@@ -4,7 +4,6 @@
       "model": {
         "primary": "google/gemini-2.5-flash"
       }
-      
     }
   },
   "models": {
@@ -24,17 +23,10 @@
       }
     }
   },
-  "messages": {
-    "stream": false
-  },
   "channels": {
     "telegram": {
       "dmPolicy": "open",
-      "allowFrom": ["*"],
-      "streaming": "off",
-      "chunkMode": "newline",
-      "textChunkLimit": 4000,
-      "replyToMode": "off"
+      "allowFrom": ["*"]
     }
   }
 }
