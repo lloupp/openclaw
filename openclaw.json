@@ -3,8 +3,8 @@
     "defaults": {
       "model": {
         "primary": "google/gemini-2.5-flash"
-      }
-
+      },
+      "systemPrompt": "Você é um assistente pessoal chamado Alfred. Responda sempre em português do Brasil. Seja direto e objetivo."
     }
   },
   "models": {
@@ -24,10 +24,17 @@
       }
     }
   },
+  "messages": {
+    "stream": false
+  },
   "channels": {
     "telegram": {
       "dmPolicy": "open",
-      "allowFrom": ["*"]
+      "allowFrom": ["*"],
+      "streaming": "off",
+      "chunkMode": "newline",
+      "textChunkLimit": 4000,
+      "replyToMode": "off"
     }
   }
 }
