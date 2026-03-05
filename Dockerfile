@@ -89,6 +89,12 @@ RUN if [ -n "$OPENCLAW_INSTALL_DOCKER_CLI" ]; then \
       rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     fi
 
+# Instala git para o script de memória
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 USER node
 COPY --chown=node:node . .
 # Normalize copied plugin/agent paths so plugin safety checks do not reject
@@ -104,9 +110,13 @@ RUN pnpm build
 ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:build
 
-# ✅ Copia o openclaw.json para o diretório de config do OpenClaw
-RUN mkdir -p /home/node/.openclaw && \
-    cp /app/openclaw.json /home/node/.openclaw/openclaw.json
+# ✅ Copia configs e arquivos de memória para os locais corretos
+RUN mkdir -p /home/node/.openclaw/workspace && \
+    cp /app/openclaw.json /home/node/.openclaw/openclaw.json && \
+    cp /app/AGENTS.md /home/node/.openclaw/workspace/AGENTS.md && \
+    cp /app/SOUL.md /home/node/.openclaw/workspace/SOUL.md && \
+    cp /app/save-memory.sh /home/node/.openclaw/save-memory.sh && \
+    chmod +x /home/node/.openclaw/save-memory.sh
 
 # Expose the CLI binary without requiring npm global writes as non-root.
 USER root
