@@ -9,6 +9,7 @@
   "models": {
     "providers": {
       "google": {
+        "apiKey": "${GOOGLE_GENERATIVE_AI_API_KEY}",
         "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
         "models": [
           { "id": "gemini-1.5-flash", "name": "Gemini 1.5 Flash" }
