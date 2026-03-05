@@ -3,7 +3,8 @@
     "defaults": {
       "model": {
         "primary": "google/gemini-2.5-flash"
-      }
+      },
+      "workspace": "/home/node/.openclaw/workspace"
     }
   },
   "models": {
@@ -17,7 +18,8 @@
             "id": "gemini-2.5-flash",
             "name": "Gemini 2.5 Flash",
             "contextWindow": 1000000,
-            "maxTokens": 8192
+            "maxTokens": 8192,
+            "googleSearchGrounding": true
           }
         ]
       }
