@@ -2,17 +2,24 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "google/gemini-1.5-flash-latest"
+        "primary": "google/gemini-1.5-flash"
       }
     }
   },
   "models": {
+    "mode": "merge",
     "providers": {
       "google": {
         "apiKey": "${GOOGLE_GENERATIVE_AI_API_KEY}",
-        "baseUrl": "https://generativelanguage.googleapis.com/v1",
+        "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+        "api": "google-generative-ai",
         "models": [
-          { "id": "gemini-1.5-flash-latest", "name": "Gemini 1.5 Flash" }
+          {
+            "id": "gemini-1.5-flash",
+            "name": "Gemini 1.5 Flash",
+            "contextWindow": 1000000,
+            "maxTokens": 8192
+          }
         ]
       }
     }
