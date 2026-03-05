@@ -4,7 +4,7 @@
       "model": {
         "primary": "google/gemini-2.5-flash"
       },
-      "systemPrompt": "Você é um assistente pessoal chamado Alfred. Responda sempre em português do Brasil. Seja direto e objetivo."
+      
     }
   },
   "models": {
