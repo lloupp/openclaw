@@ -450,6 +450,11 @@ export async function processDiscordMessage(ctx: DiscordMessagePreflightContext)
     },
     // Long tool-heavy runs are expected on Discord; keep heartbeats alive.
     maxDurationMs: DISCORD_TYPING_MAX_DURATION_MS,
+    onTtlExceeded: () => {
+      logVerbose(
+        `discord: typing TTL exceeded (${DISCORD_TYPING_MAX_DURATION_MS}ms), auto-stopping indicator for channel ${typingChannelId}`,
+      );
+    },
   });
 
   // --- Discord draft stream (edit-based preview streaming) ---

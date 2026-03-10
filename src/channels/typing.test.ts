@@ -24,6 +24,7 @@ function createTypingHarness(overrides: TypingCallbackOverrides = {}) {
   const stop: TypingHarnessStart = vi.fn<() => Promise<void>>(async () => {});
   const onStartError: TypingHarnessError = vi.fn<(err: unknown) => void>();
   const onStopError: TypingHarnessError = vi.fn<(err: unknown) => void>();
+  const onTtlExceeded = vi.fn<() => void>();
 
   if (overrides.start) {
     start.mockImplementation(overrides.start);
@@ -47,8 +48,9 @@ function createTypingHarness(overrides: TypingCallbackOverrides = {}) {
       ? { maxConsecutiveFailures: overrides.maxConsecutiveFailures }
       : {}),
     ...(overrides.maxDurationMs !== undefined ? { maxDurationMs: overrides.maxDurationMs } : {}),
+    onTtlExceeded,
   });
-  return { start, stop, onStartError, onStopError, callbacks };
+  return { start, stop, onStartError, onStopError, onTtlExceeded, callbacks };
 }
 
 describe("createTypingCallbacks", () => {
@@ -196,8 +198,9 @@ describe("createTypingCallbacks", () => {
   describe("TTL safety", () => {
     it("auto-stops typing after maxDurationMs", async () => {
       await withFakeTimers(async () => {
-        const consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
-        const { start, stop, callbacks } = createTypingHarness({ maxDurationMs: 10_000 });
+        const { start, stop, onTtlExceeded, callbacks } = createTypingHarness({
+          maxDurationMs: 10_000,
+        });
 
         await callbacks.onReplyStart();
         expect(start).toHaveBeenCalledTimes(1);
@@ -206,18 +209,15 @@ describe("createTypingCallbacks", () => {
         // Advance past TTL
         await vi.advanceTimersByTimeAsync(10_000);
 
-        // Should auto-stop
+        // Should auto-stop and invoke the TTL callback
         expect(stop).toHaveBeenCalledTimes(1);
-        expect(consoleWarn).toHaveBeenCalledWith(expect.stringContaining("TTL exceeded"));
-
-        consoleWarn.mockRestore();
+        expect(onTtlExceeded).toHaveBeenCalledTimes(1);
       });
     });
 
     it("does not auto-stop if idle is called before TTL", async () => {
       await withFakeTimers(async () => {
-        const consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
-        const { stop, callbacks } = createTypingHarness({ maxDurationMs: 10_000 });
+        const { stop, onTtlExceeded, callbacks } = createTypingHarness({ maxDurationMs: 10_000 });
 
         await callbacks.onReplyStart();
 
@@ -231,12 +231,10 @@ describe("createTypingCallbacks", () => {
         // Advance past original TTL
         await vi.advanceTimersByTimeAsync(10_000);
 
-        // Should not have triggered TTL warning
-        expect(consoleWarn).not.toHaveBeenCalled();
+        // TTL callback should not have fired
+        expect(onTtlExceeded).not.toHaveBeenCalled();
         // Stop should still be called only once
         expect(stop).toHaveBeenCalledTimes(1);
-
-        consoleWarn.mockRestore();
       });
     });
 

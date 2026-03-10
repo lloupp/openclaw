@@ -18,6 +18,8 @@ export type CreateTypingCallbacksParams = {
   maxConsecutiveFailures?: number;
   /** Maximum duration for typing indicator before auto-cleanup (safety TTL). Default: 60s */
   maxDurationMs?: number;
+  /** Called when the TTL safety timer fires and auto-stops the typing indicator. */
+  onTtlExceeded?: () => void;
 };
 
 export function createTypingCallbacks(params: CreateTypingCallbacksParams): TypingCallbacks {
@@ -55,7 +57,7 @@ export function createTypingCallbacks(params: CreateTypingCallbacksParams): Typi
     clearTtlTimer();
     ttlTimer = setTimeout(() => {
       if (!closed) {
-        console.warn(`[typing] TTL exceeded (${maxDurationMs}ms), auto-stopping typing indicator`);
+        params.onTtlExceeded?.();
         fireStop();
       }
     }, maxDurationMs);
