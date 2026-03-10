@@ -170,8 +170,9 @@ async function resolveMemoryStatusSnapshot(params: {
   }
   try {
     await manager.probeVectorAvailability();
-  } catch {}
-  const status = manager.status();
+  } catch {
+    // probeVectorAvailability is informational; continue with whatever status is available.
+  }
   await manager.close?.().catch(() => {});
   return { agentId, ...status };
 }

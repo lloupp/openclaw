@@ -69,10 +69,11 @@ function extractSherpaOnnxText(raw: string): string | null {
           return text.trim();
         }
       }
-    } catch {}
+    } catch {
+      // JSON.parse on untrusted output; invalid JSON is expected and silently ignored.
+    }
     return null;
   };
-
   const direct = tryParse(raw);
   if (direct) {
     return direct;
@@ -170,7 +171,9 @@ async function resolveCliOutput(params: {
       if (content.trim()) {
         return content.trim();
       }
-    } catch {}
+    } catch {
+      // File may not exist yet or read failed; fall through to stdout extraction.
+    }
   }
 
   if (commandId === "gemini") {

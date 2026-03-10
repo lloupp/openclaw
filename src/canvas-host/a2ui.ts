@@ -103,10 +103,11 @@ export function injectCanvasLiveReload(html: string): string {
           return true;
         }
       }
-    } catch {}
+    } catch {
+      // Native bridge (iOS/Android WebView) may not be present; degrade silently.
+    }
     return false;
   }
-  function sendUserAction(userAction) {
     const id =
       (userAction && typeof userAction.id === "string" && userAction.id.trim()) ||
       (globalThis.crypto?.randomUUID?.() ?? String(Date.now()));
@@ -127,8 +128,9 @@ export function injectCanvasLiveReload(html: string): string {
     ws.onmessage = (ev) => {
       if (String(ev.data || "") === "reload") location.reload();
     };
-  } catch {}
-})();
+  } catch {
+      // WebSocket setup is optional (live-reload); failure does not affect canvas functionality.
+    }
 </script>
 `.trim();
 

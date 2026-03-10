@@ -23,7 +23,9 @@ export type MemoryChunk = {
 export function ensureDir(dir: string): string {
   try {
     fsSync.mkdirSync(dir, { recursive: true });
-  } catch {}
+  } catch {
+    // Ignore: directory may already exist; caller proceeds regardless.
+  }
   return dir;
 }
 
@@ -96,7 +98,9 @@ export async function listMemoryFiles(
         return;
       }
       result.push(absPath);
-    } catch {}
+    } catch {
+      // File does not exist or is not accessible; skip silently.
+    }
   };
 
   await addMarkdownFile(memoryFile);
@@ -106,7 +110,9 @@ export async function listMemoryFiles(
     if (!dirStat.isSymbolicLink() && dirStat.isDirectory()) {
       await walkDir(memoryDir, result);
     }
-  } catch {}
+  } catch {
+    // Memory directory does not exist; skip silently.
+  }
 
   const normalizedExtraPaths = normalizeExtraMemoryPaths(workspaceDir, extraPaths);
   if (normalizedExtraPaths.length > 0) {
@@ -123,7 +129,9 @@ export async function listMemoryFiles(
         if (stat.isFile() && inputPath.endsWith(".md")) {
           result.push(inputPath);
         }
-      } catch {}
+      } catch {
+        // Extra path does not exist or is not accessible; skip silently.
+      }
     }
   }
   if (result.length <= 1) {
@@ -135,7 +143,9 @@ export async function listMemoryFiles(
     let key = entry;
     try {
       key = await fs.realpath(entry);
-    } catch {}
+    } catch {
+      // realpath unavailable (e.g. broken symlink); fall back to original path.
+    }
     if (seen.has(key)) {
       continue;
     }
